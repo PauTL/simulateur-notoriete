@@ -66,9 +66,10 @@ export function AwarenessChart({ market, currentAssisted, currentSpontaneous }: 
             x={currentAssisted}
             y={currentSpontaneous}
             r={8}
-            fill="hsl(46 99% 50%)"
+            fill="hsl(var(--secondary))"
             stroke="hsl(46 99% 35%)"
             strokeWidth={2}
+            ifOverflow="extendDomain"
           />
         </LineChart>
       </ResponsiveContainer>

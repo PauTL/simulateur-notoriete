@@ -99,7 +99,7 @@ export function CostChart({ market, awarenessType, onAwarenessTypeChange, curren
           />
           <ReferenceLine
             x={currentAwareness}
-            stroke="hsl(46 99% 45%)"
+            stroke="hsl(var(--secondary))"
             strokeWidth={2}
             strokeDasharray="6 4"
             label={{
