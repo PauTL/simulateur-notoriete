@@ -57,7 +57,7 @@ export function AwarenessChart({ market, currentAssisted, currentSpontaneous }: 
           <Line
             type="monotone"
             dataKey="spontaneous"
-            stroke="hsl(214 72% 52%)"
+            stroke="hsl(var(--primary))"
             strokeWidth={2.5}
             dot={false}
             animationDuration={600}
@@ -66,9 +66,10 @@ export function AwarenessChart({ market, currentAssisted, currentSpontaneous }: 
             x={currentAssisted}
             y={currentSpontaneous}
             r={8}
-            fill="hsl(46 99% 50%)"
+            fill="hsl(var(--secondary))"
             stroke="hsl(46 99% 35%)"
             strokeWidth={2}
+            ifOverflow="extendDomain"
           />
         </LineChart>
       </ResponsiveContainer>
