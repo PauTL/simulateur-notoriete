@@ -57,7 +57,7 @@ export function AwarenessChart({ market, currentAssisted, currentSpontaneous }: 
           <Line
             type="monotone"
             dataKey="spontaneous"
-            stroke="hsl(214 72% 52%)"
+            stroke="hsl(var(--primary))"
             strokeWidth={2.5}
             dot={false}
             animationDuration={600}
