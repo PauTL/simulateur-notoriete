@@ -57,7 +57,7 @@ export function TopOfMindChart({ market, currentSpontaneous, currentTopOfMind }:
           <Line
             type="monotone"
             dataKey="topOfMind"
-            stroke="hsl(var(--primary))"
+            stroke="hsl(var(--secondary))"
             strokeWidth={2.5}
             dot={false}
             animationDuration={600}
