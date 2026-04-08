@@ -44,6 +44,20 @@ export function CalculatorLayout() {
 
   return (
     <div className="space-y-6 p-6 max-w-[1200px] mx-auto">
+      {/* Title */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center"
+      >
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+          Brand Equity Calculator
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Simulateur de notoriété de marque
+        </p>
+      </motion.div>
+
       {/* Step 1: Mode choice */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
