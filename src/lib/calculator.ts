@@ -128,12 +128,47 @@ export function generateAwarenessCurve(market: MarketType): { assisted: number; 
   const model = MARKET_MODELS[market];
   
   for (let assisted = 0; assisted <= model.ceiling; assisted += 2) {
-    // S-curve: spontaneous grows slowly at first, then accelerates
     const x = assisted / model.ceiling;
     const spontaneous = model.ceiling * 0.6 * (1 / (1 + Math.exp(-8 * (x - 0.5))));
     data.push({
       assisted: Math.round(assisted),
       spontaneous: Math.round(Math.max(0, spontaneous) * 10) / 10,
+    });
+  }
+  return data;
+}
+
+/**
+ * Get spontaneous value for a given assisted value
+ */
+export function getSpontaneousFromAssisted(market: MarketType, assisted: number): number {
+  const model = MARKET_MODELS[market];
+  const x = assisted / model.ceiling;
+  return Math.round(Math.max(0, model.ceiling * 0.6 * (1 / (1 + Math.exp(-8 * (x - 0.5))))) * 10) / 10;
+}
+
+/**
+ * Get top_of_mind value for a given spontaneous value
+ */
+export function getTopOfMindFromSpontaneous(market: MarketType, spontaneous: number): number {
+  const model = MARKET_MODELS[market];
+  const maxSpontaneous = model.ceiling * 0.6;
+  const x = spontaneous / maxSpontaneous;
+  return Math.round(Math.max(0, maxSpontaneous * 0.4 * (1 / (1 + Math.exp(-8 * (x - 0.5))))) * 10) / 10;
+}
+
+/**
+ * Generate top of mind vs spontaneous curve data
+ */
+export function generateTopOfMindCurve(market: MarketType): { spontaneous: number; topOfMind: number }[] {
+  const data: { spontaneous: number; topOfMind: number }[] = [];
+  const model = MARKET_MODELS[market];
+  const maxSpontaneous = Math.round(model.ceiling * 0.6);
+
+  for (let s = 0; s <= maxSpontaneous; s += 2) {
+    data.push({
+      spontaneous: s,
+      topOfMind: getTopOfMindFromSpontaneous(market, s),
     });
   }
   return data;
