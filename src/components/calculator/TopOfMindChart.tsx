@@ -31,7 +31,7 @@ export function TopOfMindChart({ market, currentSpontaneous, currentTopOfMind, g
       className="bg-card rounded-2xl p-5 shadow-card border border-border"
     >
       <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-        De la spontanée au top of mind : quel impact ?
+        De la notoriété spontanée à top of mind
       </h3>
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
