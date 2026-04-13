@@ -48,6 +48,8 @@ export function CostChart({ market, currentAwareness, goalAwareness }: CostChart
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 88%)" />
           <XAxis
             dataKey="awareness"
+            domain={[0, 100]}
+            type="number"
             label={{ value: "Notoriété assistée (%)", position: "insideBottom", offset: -5, fontSize: 11 }}
             tick={{ fontSize: 10 }}
             stroke="hsl(220 10% 46%)"

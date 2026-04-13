@@ -16,9 +16,11 @@ interface TopOfMindChartProps {
   market: MarketType;
   currentSpontaneous: number;
   currentTopOfMind: number;
+  goalSpontaneous?: number;
+  goalTopOfMind?: number;
 }
 
-export function TopOfMindChart({ market, currentSpontaneous, currentTopOfMind }: TopOfMindChartProps) {
+export function TopOfMindChart({ market, currentSpontaneous, currentTopOfMind, goalSpontaneous, goalTopOfMind }: TopOfMindChartProps) {
   const data = useMemo(() => generateTopOfMindCurve(market), [market]);
 
   return (
@@ -29,7 +31,7 @@ export function TopOfMindChart({ market, currentSpontaneous, currentTopOfMind }:
       className="bg-card rounded-2xl p-5 shadow-card border border-border"
     >
       <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-        Notoriété Top of Mind vs. Spontanée
+        De la spontanée au top of mind : quel impact ?
       </h3>
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
@@ -71,11 +73,30 @@ export function TopOfMindChart({ market, currentSpontaneous, currentTopOfMind }:
             strokeWidth={2}
             ifOverflow="extendDomain"
           />
+          {goalSpontaneous != null && goalTopOfMind != null && (
+            <ReferenceDot
+              x={goalSpontaneous}
+              y={goalTopOfMind}
+              r={8}
+              fill="hsl(var(--primary))"
+              stroke="hsl(214 72% 42%)"
+              strokeWidth={2}
+              ifOverflow="extendDomain"
+            />
+          )}
         </LineChart>
       </ResponsiveContainer>
-      <div className="flex items-center gap-2 mt-3 justify-center">
-        <div className="w-3 h-3 rounded-full bg-secondary pulse-marker" />
-        <span className="text-xs font-medium text-muted-foreground">Votre marque actuellement</span>
+      <div className="flex items-center gap-4 mt-3 justify-center">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-secondary pulse-marker" />
+          <span className="text-xs font-medium text-muted-foreground">Actuel</span>
+        </div>
+        {goalSpontaneous != null && (
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-primary" />
+            <span className="text-xs font-medium text-muted-foreground">Objectif</span>
+          </div>
+        )}
       </div>
     </motion.div>
   );

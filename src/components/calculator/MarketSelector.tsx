@@ -6,11 +6,10 @@ interface MarketSelectorProps {
 }
 
 const markets: MarketType[] = [
-  "new_brand_new_market",
-  "new_brand_low_competition",
-  "new_brand_high_competition",
-  "established_high_competition",
-  "established_saturated",
+  "leader_low_competition",
+  "outsider_medium_competition",
+  "follower_high_competition",
+  "historical_player",
 ];
 
 export function MarketSelector({ value, onChange }: MarketSelectorProps) {
