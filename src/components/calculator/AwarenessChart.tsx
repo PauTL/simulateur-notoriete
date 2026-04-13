@@ -31,7 +31,7 @@ export function AwarenessChart({ market, currentAssisted, currentSpontaneous, go
       className="bg-card rounded-2xl p-5 shadow-card border border-border"
     >
       <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-        De l'assistée à la spontanée : où en êtes-vous ?
+        De la notoriété assistée à spontanée
       </h3>
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
