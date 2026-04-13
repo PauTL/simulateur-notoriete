@@ -16,7 +16,7 @@ import { Slider } from "@/components/ui/slider";
 
 export function CalculatorLayout() {
   const [mode, setMode] = useState<CalcMode>("budget");
-  const [market, setMarket] = useState<MarketType>("new_brand_low_competition");
+  const [market, setMarket] = useState<MarketType>("outsider_medium_competition");
   const [currentAwareness, setCurrentAwareness] = useState(15);
   const [budget, setBudget] = useState(500000);
   const [goal, setGoal] = useState(40);
@@ -184,11 +184,14 @@ export function CalculatorLayout() {
           </p>
           {mode === "budget" ? (
             <>
-              <p className="text-3xl font-bold tracking-tight">
-                {result.costPerPoint.toLocaleString("fr-FR")} €
-              </p>
+              <div className="flex items-baseline gap-2">
+                <p className="text-3xl font-bold tracking-tight">
+                  {result.costPerPoint.toLocaleString("fr-FR")} €
+                </p>
+                <span className="text-sm opacity-70">par point</span>
+              </div>
               <p className="text-xs mt-2 opacity-70">
-                par point · +{"pointsGained" in result ? result.pointsGained : 0} pts → {"finalAwareness" in result ? result.finalAwareness : 0}%
+                +{"pointsGained" in result ? result.pointsGained : 0} pts → {"finalAwareness" in result ? result.finalAwareness : 0}%
               </p>
             </>
           ) : (
@@ -197,7 +200,7 @@ export function CalculatorLayout() {
                 {"totalBudget" in result ? result.totalBudget.toLocaleString("fr-FR") : 0} €
               </p>
               <p className="text-xs mt-2 opacity-70">
-                budget · {"pointsNeeded" in result ? result.pointsNeeded : 0} pts à gagner · {result.costPerPoint.toLocaleString("fr-FR")} €/pt
+                {"pointsNeeded" in result ? result.pointsNeeded : 0} pts à gagner · {result.costPerPoint.toLocaleString("fr-FR")} €/pt
               </p>
             </>
           )}
@@ -276,11 +279,15 @@ export function CalculatorLayout() {
           market={market}
           currentAssisted={currentAwareness}
           currentSpontaneous={currentSpontaneous}
+          goalAssisted={finalAssisted}
+          goalSpontaneous={finalSpontaneous}
         />
         <TopOfMindChart
           market={market}
           currentSpontaneous={currentSpontaneous}
           currentTopOfMind={currentTopOfMind}
+          goalSpontaneous={finalSpontaneous}
+          goalTopOfMind={finalTopOfMind}
         />
       </div>
     </div>

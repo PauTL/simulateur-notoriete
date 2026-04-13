@@ -16,9 +16,11 @@ interface AwarenessChartProps {
   market: MarketType;
   currentAssisted: number;
   currentSpontaneous: number;
+  goalAssisted?: number;
+  goalSpontaneous?: number;
 }
 
-export function AwarenessChart({ market, currentAssisted, currentSpontaneous }: AwarenessChartProps) {
+export function AwarenessChart({ market, currentAssisted, currentSpontaneous, goalAssisted, goalSpontaneous }: AwarenessChartProps) {
   const data = useMemo(() => generateAwarenessCurve(market), [market]);
 
   return (
@@ -29,7 +31,7 @@ export function AwarenessChart({ market, currentAssisted, currentSpontaneous }: 
       className="bg-card rounded-2xl p-5 shadow-card border border-border"
     >
       <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-        Courbe Spontanée vs Assistée
+        De l'assistée à la spontanée : où en êtes-vous ?
       </h3>
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
@@ -71,11 +73,30 @@ export function AwarenessChart({ market, currentAssisted, currentSpontaneous }: 
             strokeWidth={2}
             ifOverflow="extendDomain"
           />
+          {goalAssisted != null && goalSpontaneous != null && (
+            <ReferenceDot
+              x={goalAssisted}
+              y={goalSpontaneous}
+              r={8}
+              fill="hsl(var(--primary))"
+              stroke="hsl(214 72% 42%)"
+              strokeWidth={2}
+              ifOverflow="extendDomain"
+            />
+          )}
         </LineChart>
       </ResponsiveContainer>
-      <div className="flex items-center gap-2 mt-3 justify-center">
-        <div className="w-3 h-3 rounded-full bg-secondary pulse-marker" />
-        <span className="text-xs font-medium text-muted-foreground">Votre marque actuellement</span>
+      <div className="flex items-center gap-4 mt-3 justify-center">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-secondary pulse-marker" />
+          <span className="text-xs font-medium text-muted-foreground">Actuel</span>
+        </div>
+        {goalAssisted != null && (
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-primary" />
+            <span className="text-xs font-medium text-muted-foreground">Objectif</span>
+          </div>
+        )}
       </div>
     </motion.div>
   );

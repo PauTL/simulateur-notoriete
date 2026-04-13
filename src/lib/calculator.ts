@@ -1,25 +1,22 @@
 // Market types with their cost-per-point models
 export type MarketType =
-  | "new_brand_new_market"
-  | "new_brand_low_competition"
-  | "new_brand_high_competition"
-  | "established_high_competition"
-  | "established_saturated";
+  | "leader_low_competition"
+  | "outsider_medium_competition"
+  | "follower_high_competition"
+  | "historical_player";
 
 export const MARKET_LABELS: Record<MarketType, string> = {
-  new_brand_new_market: "Marque neuve & marché nouveau",
-  new_brand_low_competition: "Marque neuve & marché peu concurrentiel",
-  new_brand_high_competition: "Marque neuve & marché très concurrentiel",
-  established_high_competition: "Marque installée & marché très concurrentiel",
-  established_saturated: "Marque installée & marché saturé",
+  leader_low_competition: "Leader du segment / Concurrence faible",
+  outsider_medium_competition: "Outsider du segment / Concurrence moyenne",
+  follower_high_competition: "Suiveur du segment / Concurrence forte",
+  historical_player: "Acteur historique",
 };
 
 export const MARKET_ICONS: Record<MarketType, string> = {
-  new_brand_new_market: "🌱",
-  new_brand_low_competition: "🚀",
-  new_brand_high_competition: "⚔️",
-  established_high_competition: "🏛️",
-  established_saturated: "🔒",
+  leader_low_competition: "👑",
+  outsider_medium_competition: "🚀",
+  follower_high_competition: "⚔️",
+  historical_player: "🏛️",
 };
 
 export type AwarenessType = "assisted" | "spontaneous" | "top_of_mind";
@@ -37,11 +34,10 @@ export type CalcMode = "budget" | "goal";
 // exponent: how fast cost accelerates as awareness grows
 // ceiling: max achievable awareness (%)
 const MARKET_MODELS: Record<MarketType, { baseCost: number; exponent: number; ceiling: number }> = {
-  new_brand_new_market: { baseCost: 8000, exponent: 1.6, ceiling: 95 },
-  new_brand_low_competition: { baseCost: 12000, exponent: 1.8, ceiling: 90 },
-  new_brand_high_competition: { baseCost: 18000, exponent: 2.0, ceiling: 80 },
-  established_high_competition: { baseCost: 22000, exponent: 2.2, ceiling: 75 },
-  established_saturated: { baseCost: 30000, exponent: 2.5, ceiling: 65 },
+  leader_low_competition: { baseCost: 8000, exponent: 1.6, ceiling: 95 },
+  outsider_medium_competition: { baseCost: 15000, exponent: 1.9, ceiling: 85 },
+  follower_high_competition: { baseCost: 22000, exponent: 2.2, ceiling: 75 },
+  historical_player: { baseCost: 12000, exponent: 1.8, ceiling: 90 },
 };
 
 // Awareness type multipliers (spontaneous & TOM cost more per point)
@@ -184,11 +180,13 @@ export function generateCostCurve(
   const data: { awareness: number; cost: number }[] = [];
   const model = MARKET_MODELS[market];
   
-  for (let a = 0; a <= model.ceiling - 1; a += 2) {
-    data.push({
-      awareness: a,
-      cost: Math.round(getMarginalCost(market, awarenessType, a)),
-    });
+  for (let a = 0; a <= 100; a += 2) {
+    if (a < model.ceiling) {
+      data.push({
+        awareness: a,
+        cost: Math.round(getMarginalCost(market, awarenessType, a)),
+      });
+    }
   }
   return data;
 }
