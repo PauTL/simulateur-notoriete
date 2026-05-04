@@ -13,6 +13,7 @@ import { AwarenessChart } from "./AwarenessChart";
 import { TopOfMindChart } from "./TopOfMindChart";
 import { CostChart } from "./CostChart";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 
 export function CalculatorLayout() {
   const [mode, setMode] = useState<CalcMode>("budget");
@@ -20,6 +21,11 @@ export function CalculatorLayout() {
   const [currentAwareness, setCurrentAwareness] = useState(15);
   const [budget, setBudget] = useState(500000);
   const [goal, setGoal] = useState(40);
+  const [declaredSpontaneous, setDeclaredSpontaneous] = useState<string>("");
+  const [declaredTopOfMind, setDeclaredTopOfMind] = useState<string>("");
+
+  const declaredSpontaneousNum = declaredSpontaneous === "" ? undefined : Math.max(0, Math.min(100, Number(declaredSpontaneous)));
+  const declaredTopOfMindNum = declaredTopOfMind === "" ? undefined : Math.max(0, Math.min(100, Number(declaredTopOfMind)));
 
   const result = useMemo(() => {
     if (mode === "budget") {
@@ -28,15 +34,29 @@ export function CalculatorLayout() {
     return computeFromGoal(market, "assisted", currentAwareness, goal);
   }, [market, currentAwareness, mode, budget, goal]);
 
-  // Derived awareness values
-  const currentSpontaneous = getSpontaneousFromAssisted(market, currentAwareness);
-  const currentTopOfMind = getTopOfMindFromSpontaneous(market, currentSpontaneous);
+  // Derived awareness values (calibrated if user declared real values)
+  const currentSpontaneous = declaredSpontaneousNum != null
+    ? declaredSpontaneousNum
+    : getSpontaneousFromAssisted(market, currentAwareness);
+  const currentTopOfMind = declaredTopOfMindNum != null
+    ? declaredTopOfMindNum
+    : getTopOfMindFromSpontaneous(market, currentSpontaneous);
 
-  const finalAssisted = mode === "budget" 
+  const finalAssisted = mode === "budget"
     ? ("finalAwareness" in result ? result.finalAwareness : currentAwareness)
     : goal;
-  const finalSpontaneous = getSpontaneousFromAssisted(market, finalAssisted);
-  const finalTopOfMind = getTopOfMindFromSpontaneous(market, finalSpontaneous);
+  const finalSpontaneous = getSpontaneousFromAssisted(
+    market,
+    finalAssisted,
+    currentAwareness,
+    declaredSpontaneousNum
+  );
+  const finalTopOfMind = getTopOfMindFromSpontaneous(
+    market,
+    finalSpontaneous,
+    currentSpontaneous,
+    declaredTopOfMindNum
+  );
 
   const pointsGainedAssisted = Math.round((finalAssisted - currentAwareness) * 10) / 10;
   const pointsGainedSpontaneous = Math.round((finalSpontaneous - currentSpontaneous) * 10) / 10;
