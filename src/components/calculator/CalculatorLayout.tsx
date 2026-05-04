@@ -206,63 +206,43 @@ export function CalculatorLayout() {
               animate={{ opacity: 1, height: "auto" }}
               className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"
             >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Notoriété spontanée actuelle
-                  </label>
-                  <span className="text-base font-bold text-foreground">
-                    {declaredSpontaneous === ""
-                      ? `${getSpontaneousFromAssisted(market, currentAwareness)}%`
-                      : `${declaredSpontaneous}%`}
+              <div className="flex items-center justify-between gap-3">
+                <label className="text-xs font-medium text-muted-foreground">
+                  Notoriété spontanée actuelle
+                </label>
+                <div className="relative w-24">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    placeholder="Auto"
+                    value={declaredSpontaneous}
+                    onChange={(e) => setDeclaredSpontaneous(e.target.value)}
+                    className="h-8 pr-7 text-sm text-right"
+                  />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+                    %
                   </span>
                 </div>
-                <Slider
-                  value={[
-                    declaredSpontaneous === ""
-                      ? getSpontaneousFromAssisted(market, currentAwareness)
-                      : Number(declaredSpontaneous),
-                  ]}
-                  onValueChange={([v]) => setDeclaredSpontaneous(String(v))}
-                  min={0}
-                  max={100}
-                  step={1}
-                  className="py-2"
-                />
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Notoriété Top of mind actuelle
-                  </label>
-                  <span className="text-base font-bold text-foreground">
-                    {declaredTopOfMind === ""
-                      ? `${getTopOfMindFromSpontaneous(
-                          market,
-                          declaredSpontaneous === ""
-                            ? getSpontaneousFromAssisted(market, currentAwareness)
-                            : Number(declaredSpontaneous)
-                        )}%`
-                      : `${declaredTopOfMind}%`}
+              <div className="flex items-center justify-between gap-3">
+                <label className="text-xs font-medium text-muted-foreground">
+                  Notoriété Top of mind actuelle
+                </label>
+                <div className="relative w-24">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    placeholder="Auto"
+                    value={declaredTopOfMind}
+                    onChange={(e) => setDeclaredTopOfMind(e.target.value)}
+                    className="h-8 pr-7 text-sm text-right"
+                  />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+                    %
                   </span>
                 </div>
-                <Slider
-                  value={[
-                    declaredTopOfMind === ""
-                      ? getTopOfMindFromSpontaneous(
-                          market,
-                          declaredSpontaneous === ""
-                            ? getSpontaneousFromAssisted(market, currentAwareness)
-                            : Number(declaredSpontaneous)
-                        )
-                      : Number(declaredTopOfMind),
-                  ]}
-                  onValueChange={([v]) => setDeclaredTopOfMind(String(v))}
-                  min={0}
-                  max={100}
-                  step={1}
-                  className="py-2"
-                />
               </div>
             </motion.div>
           )}
