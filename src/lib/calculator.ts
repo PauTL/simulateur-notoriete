@@ -201,6 +201,14 @@ export function generateAwarenessCurve(
       spontaneous: getSpontaneousFromAssisted(market, assisted, anchorAssisted, declaredSpontaneous),
     });
   }
+  // Ensure the curve passes exactly through the anchor point
+  if (anchorAssisted != null && !data.some((d) => d.assisted === anchorAssisted)) {
+    data.push({
+      assisted: anchorAssisted,
+      spontaneous: getSpontaneousFromAssisted(market, anchorAssisted, anchorAssisted, declaredSpontaneous),
+    });
+    data.sort((a, b) => a.assisted - b.assisted);
+  }
   return data;
 }
 
