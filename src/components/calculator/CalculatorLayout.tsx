@@ -207,29 +207,61 @@ export function CalculatorLayout() {
               className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"
             >
               <div className="space-y-2">
-                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Notoriété spontanée actuelle
-                </label>
-                <Input
-                  type="number"
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Notoriété spontanée actuelle
+                  </label>
+                  <span className="text-base font-bold text-foreground">
+                    {declaredSpontaneous === ""
+                      ? `${getSpontaneousFromAssisted(market, currentAwareness)}%`
+                      : `${declaredSpontaneous}%`}
+                  </span>
+                </div>
+                <Slider
+                  value={[
+                    declaredSpontaneous === ""
+                      ? getSpontaneousFromAssisted(market, currentAwareness)
+                      : Number(declaredSpontaneous),
+                  ]}
+                  onValueChange={([v]) => setDeclaredSpontaneous(String(v))}
                   min={0}
                   max={100}
-                  placeholder="Auto"
-                  value={declaredSpontaneous}
-                  onChange={(e) => setDeclaredSpontaneous(e.target.value)}
+                  step={1}
+                  className="py-2"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Top of mind actuel
-                </label>
-                <Input
-                  type="number"
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Notoriété Top of mind actuelle
+                  </label>
+                  <span className="text-base font-bold text-foreground">
+                    {declaredTopOfMind === ""
+                      ? `${getTopOfMindFromSpontaneous(
+                          market,
+                          declaredSpontaneous === ""
+                            ? getSpontaneousFromAssisted(market, currentAwareness)
+                            : Number(declaredSpontaneous)
+                        )}%`
+                      : `${declaredTopOfMind}%`}
+                  </span>
+                </div>
+                <Slider
+                  value={[
+                    declaredTopOfMind === ""
+                      ? getTopOfMindFromSpontaneous(
+                          market,
+                          declaredSpontaneous === ""
+                            ? getSpontaneousFromAssisted(market, currentAwareness)
+                            : Number(declaredSpontaneous)
+                        )
+                      : Number(declaredTopOfMind),
+                  ]}
+                  onValueChange={([v]) => setDeclaredTopOfMind(String(v))}
                   min={0}
                   max={100}
-                  placeholder="Auto"
-                  value={declaredTopOfMind}
-                  onChange={(e) => setDeclaredTopOfMind(e.target.value)}
+                  step={1}
+                  className="py-2"
                 />
               </div>
             </motion.div>
