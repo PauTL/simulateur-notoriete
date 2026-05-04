@@ -18,10 +18,14 @@ interface AwarenessChartProps {
   currentSpontaneous: number;
   goalAssisted?: number;
   goalSpontaneous?: number;
+  declaredSpontaneous?: number;
 }
 
-export function AwarenessChart({ market, currentAssisted, currentSpontaneous, goalAssisted, goalSpontaneous }: AwarenessChartProps) {
-  const data = useMemo(() => generateAwarenessCurve(market), [market]);
+export function AwarenessChart({ market, currentAssisted, currentSpontaneous, goalAssisted, goalSpontaneous, declaredSpontaneous }: AwarenessChartProps) {
+  const data = useMemo(
+    () => generateAwarenessCurve(market, currentAssisted, declaredSpontaneous),
+    [market, currentAssisted, declaredSpontaneous]
+  );
 
   return (
     <motion.div
