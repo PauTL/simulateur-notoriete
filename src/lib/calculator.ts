@@ -201,6 +201,14 @@ export function generateAwarenessCurve(
       spontaneous: getSpontaneousFromAssisted(market, assisted, anchorAssisted, declaredSpontaneous),
     });
   }
+  // Ensure the curve passes exactly through the anchor point
+  if (anchorAssisted != null && !data.some((d) => d.assisted === anchorAssisted)) {
+    data.push({
+      assisted: anchorAssisted,
+      spontaneous: getSpontaneousFromAssisted(market, anchorAssisted, anchorAssisted, declaredSpontaneous),
+    });
+    data.sort((a, b) => a.assisted - b.assisted);
+  }
   return data;
 }
 
@@ -218,6 +226,13 @@ export function generateTopOfMindCurve(
       spontaneous: s,
       topOfMind: getTopOfMindFromSpontaneous(market, s, anchorSpontaneous, declaredTopOfMind),
     });
+  }
+  if (anchorSpontaneous != null && !data.some((d) => d.spontaneous === anchorSpontaneous)) {
+    data.push({
+      spontaneous: anchorSpontaneous,
+      topOfMind: getTopOfMindFromSpontaneous(market, anchorSpontaneous, anchorSpontaneous, declaredTopOfMind),
+    });
+    data.sort((a, b) => a.spontaneous - b.spontaneous);
   }
   return data;
 }
