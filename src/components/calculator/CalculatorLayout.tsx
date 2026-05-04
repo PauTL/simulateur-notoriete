@@ -23,6 +23,7 @@ export function CalculatorLayout() {
   const [goal, setGoal] = useState(40);
   const [declaredSpontaneous, setDeclaredSpontaneous] = useState<string>("");
   const [declaredTopOfMind, setDeclaredTopOfMind] = useState<string>("");
+  const [showRefine, setShowRefine] = useState(false);
 
   const declaredSpontaneousNum = declaredSpontaneous === "" ? undefined : Math.max(0, Math.min(100, Number(declaredSpontaneous)));
   const declaredTopOfMindNum = declaredTopOfMind === "" ? undefined : Math.max(0, Math.min(100, Number(declaredTopOfMind)));
