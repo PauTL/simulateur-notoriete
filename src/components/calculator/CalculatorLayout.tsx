@@ -116,7 +116,7 @@ export function CalculatorLayout() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-card rounded-2xl p-5 shadow-card border border-border"
+        className="bg-card rounded-2xl p-5 shadow-card border border-border space-y-5"
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Market */}
