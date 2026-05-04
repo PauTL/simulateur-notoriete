@@ -18,10 +18,14 @@ interface TopOfMindChartProps {
   currentTopOfMind: number;
   goalSpontaneous?: number;
   goalTopOfMind?: number;
+  declaredTopOfMind?: number;
 }
 
-export function TopOfMindChart({ market, currentSpontaneous, currentTopOfMind, goalSpontaneous, goalTopOfMind }: TopOfMindChartProps) {
-  const data = useMemo(() => generateTopOfMindCurve(market), [market]);
+export function TopOfMindChart({ market, currentSpontaneous, currentTopOfMind, goalSpontaneous, goalTopOfMind, declaredTopOfMind }: TopOfMindChartProps) {
+  const data = useMemo(
+    () => generateTopOfMindCurve(market, currentSpontaneous, declaredTopOfMind),
+    [market, currentSpontaneous, declaredTopOfMind]
+  );
 
   return (
     <motion.div
