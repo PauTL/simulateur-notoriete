@@ -227,6 +227,13 @@ export function generateTopOfMindCurve(
       topOfMind: getTopOfMindFromSpontaneous(market, s, anchorSpontaneous, declaredTopOfMind),
     });
   }
+  if (anchorSpontaneous != null && !data.some((d) => d.spontaneous === anchorSpontaneous)) {
+    data.push({
+      spontaneous: anchorSpontaneous,
+      topOfMind: getTopOfMindFromSpontaneous(market, anchorSpontaneous, anchorSpontaneous, declaredTopOfMind),
+    });
+    data.sort((a, b) => a.spontaneous - b.spontaneous);
+  }
   return data;
 }
 
