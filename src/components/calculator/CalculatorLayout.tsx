@@ -206,11 +206,11 @@ export function CalculatorLayout() {
               animate={{ opacity: 1, height: "auto" }}
               className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"
             >
-              <div className="flex items-center justify-between gap-3">
-                <label className="text-xs font-medium text-muted-foreground">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Notoriété spontanée actuelle
                 </label>
-                <div className="relative w-24">
+                <div className="relative">
                   <Input
                     type="number"
                     min={0}
@@ -218,18 +218,18 @@ export function CalculatorLayout() {
                     placeholder="Auto"
                     value={declaredSpontaneous}
                     onChange={(e) => setDeclaredSpontaneous(e.target.value)}
-                    className="h-8 pr-7 text-sm text-right"
+                    className="h-9 pr-7 text-sm"
                   />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
                     %
                   </span>
                 </div>
               </div>
-              <div className="flex items-center justify-between gap-3">
-                <label className="text-xs font-medium text-muted-foreground">
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Notoriété Top of mind actuelle
                 </label>
-                <div className="relative w-24">
+                <div className="relative">
                   <Input
                     type="number"
                     min={0}
@@ -237,9 +237,9 @@ export function CalculatorLayout() {
                     placeholder="Auto"
                     value={declaredTopOfMind}
                     onChange={(e) => setDeclaredTopOfMind(e.target.value)}
-                    className="h-8 pr-7 text-sm text-right"
+                    className="h-9 pr-7 text-sm"
                   />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
                     %
                   </span>
                 </div>
