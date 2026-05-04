@@ -346,6 +346,7 @@ export function CalculatorLayout() {
           currentSpontaneous={currentSpontaneous}
           goalAssisted={finalAssisted}
           goalSpontaneous={finalSpontaneous}
+          declaredSpontaneous={declaredSpontaneousNum}
         />
         <TopOfMindChart
           market={market}
@@ -353,6 +354,7 @@ export function CalculatorLayout() {
           currentTopOfMind={currentTopOfMind}
           goalSpontaneous={finalSpontaneous}
           goalTopOfMind={finalTopOfMind}
+          declaredTopOfMind={declaredTopOfMindNum}
         />
       </div>
     </div>
