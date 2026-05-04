@@ -116,55 +116,107 @@ export function computeFromGoal(
 }
 
 /**
- * Generate awareness curve data (spontaneous vs assisted)
- * Shows S-curve relationship
+ * Raw (uncalibrated) spontaneous value for a given assisted value
  */
-export function generateAwarenessCurve(market: MarketType): { assisted: number; spontaneous: number }[] {
-  const data: { assisted: number; spontaneous: number }[] = [];
+function rawSpontaneousFromAssisted(market: MarketType, assisted: number): number {
   const model = MARKET_MODELS[market];
-  
-  for (let assisted = 0; assisted <= model.ceiling; assisted += 2) {
-    const x = assisted / model.ceiling;
-    const spontaneous = model.ceiling * 0.6 * (1 / (1 + Math.exp(-8 * (x - 0.5))));
+  const x = Math.min(assisted, model.ceiling) / model.ceiling;
+  return Math.max(0, model.ceiling * 0.6 * (1 / (1 + Math.exp(-8 * (x - 0.5)))));
+}
+
+/**
+ * Raw (uncalibrated) top of mind value for a given spontaneous value
+ */
+function rawTopOfMindFromSpontaneous(market: MarketType, spontaneous: number): number {
+  const model = MARKET_MODELS[market];
+  const maxSpontaneous = model.ceiling * 0.6;
+  const x = Math.min(spontaneous, maxSpontaneous) / maxSpontaneous;
+  return Math.max(0, maxSpontaneous * 0.4 * (1 / (1 + Math.exp(-8 * (x - 0.5)))));
+}
+
+/**
+ * Calibration: if the user declared a real value at a known anchor point,
+ * we deform the raw curve so it passes through (anchorX, declaredY) while
+ * keeping its shape. We use a smooth blended ratio that converges to 1 at
+ * the extremes (0 and 100) so the curve isn't distorted everywhere.
+ */
+function calibrate(rawValue: number, rawAtAnchor: number, declaredAtAnchor: number, x: number, anchorX: number): number {
+  if (declaredAtAnchor == null || rawAtAnchor <= 0 || anchorX <= 0) return rawValue;
+  const ratio = declaredAtAnchor / rawAtAnchor;
+  // Weight of calibration: full at anchor, fades to 0 at x=0 and x=100
+  const distance = Math.abs(x - anchorX) / Math.max(anchorX, 100 - anchorX);
+  const weight = Math.max(0, 1 - distance);
+  const effectiveRatio = 1 + (ratio - 1) * weight;
+  return Math.max(0, rawValue * effectiveRatio);
+}
+
+/**
+ * Get spontaneous value for a given assisted value (with optional calibration)
+ */
+export function getSpontaneousFromAssisted(
+  market: MarketType,
+  assisted: number,
+  anchorAssisted?: number,
+  declaredSpontaneous?: number
+): number {
+  const raw = rawSpontaneousFromAssisted(market, assisted);
+  if (anchorAssisted != null && declaredSpontaneous != null) {
+    const rawAtAnchor = rawSpontaneousFromAssisted(market, anchorAssisted);
+    const calibrated = calibrate(raw, rawAtAnchor, declaredSpontaneous, assisted, anchorAssisted);
+    return Math.round(calibrated * 10) / 10;
+  }
+  return Math.round(raw * 10) / 10;
+}
+
+/**
+ * Get top_of_mind value for a given spontaneous value (with optional calibration)
+ */
+export function getTopOfMindFromSpontaneous(
+  market: MarketType,
+  spontaneous: number,
+  anchorSpontaneous?: number,
+  declaredTopOfMind?: number
+): number {
+  const raw = rawTopOfMindFromSpontaneous(market, spontaneous);
+  if (anchorSpontaneous != null && declaredTopOfMind != null) {
+    const rawAtAnchor = rawTopOfMindFromSpontaneous(market, anchorSpontaneous);
+    const calibrated = calibrate(raw, rawAtAnchor, declaredTopOfMind, spontaneous, anchorSpontaneous);
+    return Math.round(calibrated * 10) / 10;
+  }
+  return Math.round(raw * 10) / 10;
+}
+
+/**
+ * Generate awareness curve data (spontaneous vs assisted), optionally calibrated
+ */
+export function generateAwarenessCurve(
+  market: MarketType,
+  anchorAssisted?: number,
+  declaredSpontaneous?: number
+): { assisted: number; spontaneous: number }[] {
+  const data: { assisted: number; spontaneous: number }[] = [];
+  for (let assisted = 0; assisted <= 100; assisted += 2) {
     data.push({
-      assisted: Math.round(assisted),
-      spontaneous: Math.round(Math.max(0, spontaneous) * 10) / 10,
+      assisted,
+      spontaneous: getSpontaneousFromAssisted(market, assisted, anchorAssisted, declaredSpontaneous),
     });
   }
   return data;
 }
 
 /**
- * Get spontaneous value for a given assisted value
+ * Generate top of mind vs spontaneous curve data, optionally calibrated
  */
-export function getSpontaneousFromAssisted(market: MarketType, assisted: number): number {
-  const model = MARKET_MODELS[market];
-  const x = assisted / model.ceiling;
-  return Math.round(Math.max(0, model.ceiling * 0.6 * (1 / (1 + Math.exp(-8 * (x - 0.5))))) * 10) / 10;
-}
-
-/**
- * Get top_of_mind value for a given spontaneous value
- */
-export function getTopOfMindFromSpontaneous(market: MarketType, spontaneous: number): number {
-  const model = MARKET_MODELS[market];
-  const maxSpontaneous = model.ceiling * 0.6;
-  const x = spontaneous / maxSpontaneous;
-  return Math.round(Math.max(0, maxSpontaneous * 0.4 * (1 / (1 + Math.exp(-8 * (x - 0.5))))) * 10) / 10;
-}
-
-/**
- * Generate top of mind vs spontaneous curve data
- */
-export function generateTopOfMindCurve(market: MarketType): { spontaneous: number; topOfMind: number }[] {
+export function generateTopOfMindCurve(
+  market: MarketType,
+  anchorSpontaneous?: number,
+  declaredTopOfMind?: number
+): { spontaneous: number; topOfMind: number }[] {
   const data: { spontaneous: number; topOfMind: number }[] = [];
-  const model = MARKET_MODELS[market];
-  const maxSpontaneous = Math.round(model.ceiling * 0.6);
-
-  for (let s = 0; s <= maxSpontaneous; s += 2) {
+  for (let s = 0; s <= 100; s += 2) {
     data.push({
       spontaneous: s,
-      topOfMind: getTopOfMindFromSpontaneous(market, s),
+      topOfMind: getTopOfMindFromSpontaneous(market, s, anchorSpontaneous, declaredTopOfMind),
     });
   }
   return data;

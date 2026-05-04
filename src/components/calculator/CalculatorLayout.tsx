@@ -13,6 +13,7 @@ import { AwarenessChart } from "./AwarenessChart";
 import { TopOfMindChart } from "./TopOfMindChart";
 import { CostChart } from "./CostChart";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 
 export function CalculatorLayout() {
   const [mode, setMode] = useState<CalcMode>("budget");
@@ -20,6 +21,11 @@ export function CalculatorLayout() {
   const [currentAwareness, setCurrentAwareness] = useState(15);
   const [budget, setBudget] = useState(500000);
   const [goal, setGoal] = useState(40);
+  const [declaredSpontaneous, setDeclaredSpontaneous] = useState<string>("");
+  const [declaredTopOfMind, setDeclaredTopOfMind] = useState<string>("");
+
+  const declaredSpontaneousNum = declaredSpontaneous === "" ? undefined : Math.max(0, Math.min(100, Number(declaredSpontaneous)));
+  const declaredTopOfMindNum = declaredTopOfMind === "" ? undefined : Math.max(0, Math.min(100, Number(declaredTopOfMind)));
 
   const result = useMemo(() => {
     if (mode === "budget") {
@@ -28,15 +34,29 @@ export function CalculatorLayout() {
     return computeFromGoal(market, "assisted", currentAwareness, goal);
   }, [market, currentAwareness, mode, budget, goal]);
 
-  // Derived awareness values
-  const currentSpontaneous = getSpontaneousFromAssisted(market, currentAwareness);
-  const currentTopOfMind = getTopOfMindFromSpontaneous(market, currentSpontaneous);
+  // Derived awareness values (calibrated if user declared real values)
+  const currentSpontaneous = declaredSpontaneousNum != null
+    ? declaredSpontaneousNum
+    : getSpontaneousFromAssisted(market, currentAwareness);
+  const currentTopOfMind = declaredTopOfMindNum != null
+    ? declaredTopOfMindNum
+    : getTopOfMindFromSpontaneous(market, currentSpontaneous);
 
-  const finalAssisted = mode === "budget" 
+  const finalAssisted = mode === "budget"
     ? ("finalAwareness" in result ? result.finalAwareness : currentAwareness)
     : goal;
-  const finalSpontaneous = getSpontaneousFromAssisted(market, finalAssisted);
-  const finalTopOfMind = getTopOfMindFromSpontaneous(market, finalSpontaneous);
+  const finalSpontaneous = getSpontaneousFromAssisted(
+    market,
+    finalAssisted,
+    currentAwareness,
+    declaredSpontaneousNum
+  );
+  const finalTopOfMind = getTopOfMindFromSpontaneous(
+    market,
+    finalSpontaneous,
+    currentSpontaneous,
+    declaredTopOfMindNum
+  );
 
   const pointsGainedAssisted = Math.round((finalAssisted - currentAwareness) * 10) / 10;
   const pointsGainedSpontaneous = Math.round((finalSpontaneous - currentSpontaneous) * 10) / 10;
@@ -170,6 +190,51 @@ export function CalculatorLayout() {
         </div>
       </motion.div>
 
+      {/* Optional: declared real awareness values */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.12 }}
+        className="bg-card rounded-2xl p-5 shadow-card border border-border"
+      >
+        <div className="mb-3">
+          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Données déclarées (facultatif)
+          </h3>
+          <p className="text-xs text-muted-foreground mt-1">
+            Si vous connaissez vos valeurs réelles, renseignez-les pour calibrer les courbes de correspondance.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">
+              Notoriété spontanée actuelle (%)
+            </label>
+            <Input
+              type="number"
+              min={0}
+              max={100}
+              placeholder="Auto"
+              value={declaredSpontaneous}
+              onChange={(e) => setDeclaredSpontaneous(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-muted-foreground">
+              Top of mind actuel (%)
+            </label>
+            <Input
+              type="number"
+              min={0}
+              max={100}
+              placeholder="Auto"
+              value={declaredTopOfMind}
+              onChange={(e) => setDeclaredTopOfMind(e.target.value)}
+            />
+          </div>
+        </div>
+      </motion.div>
+
       {/* Result block + Insight */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -281,6 +346,7 @@ export function CalculatorLayout() {
           currentSpontaneous={currentSpontaneous}
           goalAssisted={finalAssisted}
           goalSpontaneous={finalSpontaneous}
+          declaredSpontaneous={declaredSpontaneousNum}
         />
         <TopOfMindChart
           market={market}
@@ -288,6 +354,7 @@ export function CalculatorLayout() {
           currentTopOfMind={currentTopOfMind}
           goalSpontaneous={finalSpontaneous}
           goalTopOfMind={finalTopOfMind}
+          declaredTopOfMind={declaredTopOfMindNum}
         />
       </div>
     </div>
