@@ -23,6 +23,7 @@ export function CalculatorLayout() {
   const [goal, setGoal] = useState(40);
   const [declaredSpontaneous, setDeclaredSpontaneous] = useState<string>("");
   const [declaredTopOfMind, setDeclaredTopOfMind] = useState<string>("");
+  const [showRefine, setShowRefine] = useState(false);
 
   const declaredSpontaneousNum = declaredSpontaneous === "" ? undefined : Math.max(0, Math.min(100, Number(declaredSpontaneous)));
   const declaredTopOfMindNum = declaredTopOfMind === "" ? undefined : Math.max(0, Math.min(100, Number(declaredTopOfMind)));
@@ -189,34 +190,50 @@ export function CalculatorLayout() {
           </div>
         </div>
 
-        {/* Optional declared values - inline, discreet */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-border">
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Notoriété spontanée actuelle <span className="normal-case text-muted-foreground/70">(facultatif)</span>
-            </label>
-            <Input
-              type="number"
-              min={0}
-              max={100}
-              placeholder="Auto"
-              value={declaredSpontaneous}
-              onChange={(e) => setDeclaredSpontaneous(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Top of mind actuel <span className="normal-case text-muted-foreground/70">(facultatif)</span>
-            </label>
-            <Input
-              type="number"
-              min={0}
-              max={100}
-              placeholder="Auto"
-              value={declaredTopOfMind}
-              onChange={(e) => setDeclaredTopOfMind(e.target.value)}
-            />
-          </div>
+        {/* Optional declared values - behind a toggle */}
+        <div className="pt-4 border-t border-border">
+          <button
+            type="button"
+            onClick={() => setShowRefine((v) => !v)}
+            className="text-xs font-medium text-primary hover:underline flex items-center gap-1.5"
+          >
+            <span className={`transition-transform duration-200 ${showRefine ? "rotate-90" : ""}`}>›</span>
+            Affiner avec d'autres données connues
+          </button>
+          {showRefine && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"
+            >
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Notoriété spontanée actuelle
+                </label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={100}
+                  placeholder="Auto"
+                  value={declaredSpontaneous}
+                  onChange={(e) => setDeclaredSpontaneous(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Top of mind actuel
+                </label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={100}
+                  placeholder="Auto"
+                  value={declaredTopOfMind}
+                  onChange={(e) => setDeclaredTopOfMind(e.target.value)}
+                />
+              </div>
+            </motion.div>
+          )}
         </div>
       </motion.div>
 
