@@ -254,7 +254,9 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
           <span className="font-semibold text-foreground">Recommandation —</span>{" "}
           {totalGrp.toLocaleString("fr-FR")} GRP distribués sur 52 semaines
         </div>
+        </div>
       </motion.div>
+
 
 
     </div>
