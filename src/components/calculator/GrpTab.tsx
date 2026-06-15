@@ -236,13 +236,18 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
                     type="button"
                     title={`S${d.week} — ${d.grp} GRP`}
                     className={[
-                      "h-9 w-10 rounded-lg text-xs font-semibold transition-all duration-150 select-none focus:outline-none flex-shrink-0",
+                      "h-9 w-10 rounded-lg text-xs font-semibold transition-all duration-150 select-none focus:outline-none flex-shrink-0 flex flex-col items-center justify-center gap-0.5",
                       active
                         ? "shadow-sm scale-[1.03] bg-primary text-primary-foreground"
                         : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent hover:border-border",
                     ].join(" ")}
                   >
-                    {active ? d.grp : d.week}
+                    <span>{d.week}</span>
+                    {active && (
+                      <span className="text-[9px] leading-none px-1 py-0.5 rounded-full bg-white/20 font-bold">
+                        {d.grp}
+                      </span>
+                    )}
                   </button>
                 );
               })}
