@@ -2,8 +2,8 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ResponsiveContainer,
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
