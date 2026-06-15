@@ -211,6 +211,13 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
                 formatter={(value: number) => [`${value.toFixed(1)}%`, "Mémorisation"]}
                 labelFormatter={(w) => `Semaine ${w}`}
               />
+              <Area
+                type="monotone"
+                dataKey="awareness"
+                stroke="none"
+                fill="url(#awarenessGradient)"
+                animationDuration={400}
+              />
               <Line
                 type="monotone"
                 dataKey="awareness"
