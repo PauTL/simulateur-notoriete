@@ -123,6 +123,9 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
                 €
               </span>
             </div>
+            <p className="text-[11px] text-muted-foreground leading-tight">
+              L'outil calcule automatiquement le bon GRP hebdomadaire, pouvant aller entre 60 et 600 GRP
+            </p>
           </div>
 
           <div className="space-y-2">
