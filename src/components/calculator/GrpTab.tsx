@@ -177,100 +177,82 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
           Répartition des GRP & courbe de mémorisation
         </h3>
 
-        {/* Area chart: % mémorisation */}
-        <ResponsiveContainer width="100%" height={280}>
-          <AreaChart data={data} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
-            <defs>
-              <linearGradient id="memArea" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.05} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 90%)" vertical={false} />
-            <XAxis
-              dataKey="week"
-              tick={{ fontSize: 10 }}
-              stroke="hsl(220 10% 46%)"
-              interval={0}
-              tickFormatter={(w) => (w % 2 === 1 ? String(w) : "")}
-            />
-            <YAxis
-              domain={[0, 100]}
-              tick={{ fontSize: 10 }}
-              stroke="hsl(220 10% 46%)"
-              tickFormatter={(v) => `${v}%`}
-              label={{
-                value: "% Mémorisation",
-                angle: -90,
-                position: "insideLeft",
-                offset: 14,
-                fontSize: 11,
-                fill: "hsl(220 10% 46%)",
-              }}
-            />
-            <Tooltip
-              contentStyle={{
-                borderRadius: 12,
-                border: "1px solid hsl(220 14% 88%)",
-                boxShadow: "0 8px 24px -4px rgb(0 0 0 / 0.08)",
-                fontSize: 12,
-              }}
-              formatter={(value: number) => [`${value}%`, "Mémorisation"]}
-              labelFormatter={(w) => `Semaine ${w}`}
-            />
-            <Area
-              type="monotone"
-              dataKey="awareness"
-              stroke="hsl(var(--primary))"
-              strokeWidth={2}
-              fill="url(#memArea)"
-              animationDuration={600}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        {/* Line chart: % mémorisation */}
+        <div className="w-full" style={{ height: 280 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} margin={{ top: 8, right: 24, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 15% 90%)" vertical={true} />
+              <XAxis
+                dataKey="week"
+                tick={{ fontSize: 11, fill: "hsl(220 12% 55%)" }}
+                tickLine={false}
+                axisLine={{ stroke: "hsl(220 15% 88%)" }}
+                interval={0}
+                tickFormatter={(w) => (w % 2 === 1 ? String(w) : "")}
+                height={28}
+              />
+              <YAxis
+                tickFormatter={(v) => `${v}%`}
+                domain={[0, 100]}
+                ticks={[0, 20, 40, 60, 80, 100]}
+                tick={{ fontSize: 11, fill: "hsl(220 12% 55%)" }}
+                tickLine={false}
+                axisLine={false}
+                width={44}
+              />
+              <Tooltip
+                contentStyle={{
+                  borderRadius: 12,
+                  border: "1px solid hsl(220 14% 88%)",
+                  boxShadow: "0 8px 24px -4px rgb(0 0 0 / 0.08)",
+                  fontSize: 12,
+                }}
+                formatter={(value: number) => [`${value.toFixed(1)}%`, "Mémorisation"]}
+                labelFormatter={(w) => `Semaine ${w}`}
+              />
+              <Line
+                type="monotone"
+                dataKey="awareness"
+                name="Mémorisation"
+                stroke="hsl(var(--primary))"
+                strokeWidth={2.5}
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 0 }}
+                animationDuration={400}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
 
-        {/* Week allocation grid */}
-        <div className="mt-4 flex items-start gap-3">
-          <div className="shrink-0 w-32 pt-2">
-            <div className="text-sm font-semibold text-foreground leading-tight">
-              Recommandation
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {totalGrp.toLocaleString("fr-FR")} GRP distribués
-            </div>
-          </div>
-          <div className="flex-1 overflow-x-auto">
-            <div className="grid grid-flow-col auto-cols-fr gap-1 min-w-full">
-              {data.map((d) => {
-                const active = d.grp > 0;
-                return (
-                  <div
-                    key={d.week}
-                    className="relative flex flex-col items-center"
-                    title={`Semaine ${d.week} — ${d.grp} GRP`}
-                  >
-                    {active && (
-                      <span className="mb-1 inline-flex items-center justify-center min-w-[22px] h-[18px] px-1 rounded-full bg-foreground text-[9px] font-semibold text-background">
-                        {d.grp}
-                      </span>
-                    )}
-                    {!active && <span className="mb-1 h-[18px]" />}
-                    <div
-                      className={`w-full aspect-square rounded-md flex items-center justify-center text-[10px] font-semibold transition-colors ${
-                        active
-                          ? "bg-secondary text-foreground border border-secondary"
-                          : "bg-transparent text-muted-foreground border border-dashed border-border"
-                      }`}
-                    >
-                      {d.week}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+        {/* Week allocation row */}
+        <div className="mt-4 flex items-center gap-3" style={{ paddingLeft: 44, paddingRight: 24 }}>
+          <div className="flex flex-1 gap-1">
+            {data.map((d) => {
+              const active = d.grp > 0;
+              return (
+                <button
+                  key={d.week}
+                  type="button"
+                  title={`S${d.week} — ${d.grp} GRP`}
+                  className={[
+                    "flex-1 h-9 rounded-lg text-xs font-semibold transition-all duration-150 select-none focus:outline-none",
+                    active
+                      ? "shadow-sm scale-[1.03] bg-primary text-primary-foreground"
+                      : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent hover:border-border",
+                  ].join(" ")}
+                >
+                  {active ? d.grp : d.week}
+                </button>
+              );
+            })}
           </div>
         </div>
+        <div className="mt-2 text-xs text-muted-foreground" style={{ paddingLeft: 44 }}>
+          <span className="font-semibold text-foreground">Recommandation —</span>{" "}
+          {totalGrp.toLocaleString("fr-FR")} GRP distribués sur 52 semaines
+        </div>
       </motion.div>
+
 
       {/* Insight */}
       <div className="bg-secondary/50 border border-secondary rounded-2xl p-5">
