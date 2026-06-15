@@ -90,7 +90,7 @@ function simulate(
 
 export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
   const [beta, setBeta] = useState(30); // %
-  const [couverture, setCouverture] = useState(60); // %
+  const couverture = 60; // % (fixed, no longer user-controlled)
   const [costPerGrp, setCostPerGrp] = useState(4000); // €
 
   const { data, maintenanceGrp, boostGrp, totalGrp, totalBudget } = useMemo(
