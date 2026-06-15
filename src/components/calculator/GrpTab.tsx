@@ -146,6 +146,9 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
             <p className="text-[11px] text-muted-foreground leading-tight">
               % de personnes qui se souviennent d'une publicité après une seule exposition
             </p>
+            <p className="text-[11px] text-muted-foreground leading-tight">
+              L'objectif de notoriété assistée à atteindre est : {targetAssisted}%
+            </p>
           </div>
 
         </div>
