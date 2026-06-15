@@ -223,12 +223,13 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
           <div style={{ minWidth: "fit-content" }}>
             <div className="flex gap-1">
               {data.map((d) => {
-                const active = d.grp > 0;
+                const forceInactive = (d.week >= 6 && d.week <= 12) || (d.week >= 17 && d.week <= 19);
+                const active = !forceInactive && d.grp > 0;
                 return (
                   <div key={d.week} className="relative flex-shrink-0 pt-2 pr-2">
                     <button
                       type="button"
-                      title={`S${d.week} — ${d.grp} GRP`}
+                      title={`S${d.week}`}
                       className={[
                         "h-9 w-10 rounded-lg text-xs font-semibold transition-all duration-150 select-none focus:outline-none flex items-center justify-center",
                         active
