@@ -225,26 +225,28 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
         </div>
 
         {/* Week allocation row */}
-        <div className="mt-4 flex items-center gap-3" style={{ paddingLeft: 44, paddingRight: 24 }}>
-          <div className="flex flex-1 gap-1">
-            {data.map((d) => {
-              const active = d.grp > 0;
-              return (
-                <button
-                  key={d.week}
-                  type="button"
-                  title={`S${d.week} — ${d.grp} GRP`}
-                  className={[
-                    "flex-1 h-9 rounded-lg text-xs font-semibold transition-all duration-150 select-none focus:outline-none",
-                    active
-                      ? "shadow-sm scale-[1.03] bg-primary text-primary-foreground"
-                      : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent hover:border-border",
-                  ].join(" ")}
-                >
-                  {active ? d.grp : d.week}
-                </button>
-              );
-            })}
+        <div className="mt-4 overflow-x-auto scrollbar-thin" style={{ paddingLeft: 44, paddingRight: 24 }}>
+          <div style={{ minWidth: "fit-content" }}>
+            <div className="flex gap-1">
+              {data.map((d) => {
+                const active = d.grp > 0;
+                return (
+                  <button
+                    key={d.week}
+                    type="button"
+                    title={`S${d.week} — ${d.grp} GRP`}
+                    className={[
+                      "h-9 w-10 rounded-lg text-xs font-semibold transition-all duration-150 select-none focus:outline-none flex-shrink-0",
+                      active
+                        ? "shadow-sm scale-[1.03] bg-primary text-primary-foreground"
+                        : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent hover:border-border",
+                    ].join(" ")}
+                  >
+                    {active ? d.grp : d.week}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
         <div className="mt-2 text-xs text-muted-foreground" style={{ paddingLeft: 44 }}>
