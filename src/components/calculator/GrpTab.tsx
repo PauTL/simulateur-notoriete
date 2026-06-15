@@ -106,7 +106,7 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
         animate={{ opacity: 1, y: 0 }}
         className="bg-card rounded-2xl p-5 shadow-card border border-border"
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Coût du GRP
