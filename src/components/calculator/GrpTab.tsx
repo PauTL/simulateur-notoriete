@@ -145,25 +145,6 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
             </p>
           </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Couverture
-              </label>
-              <span className="text-base font-bold text-foreground">{couverture}%</span>
-            </div>
-            <Slider
-              value={[couverture]}
-              onValueChange={([v]) => setCouverture(v)}
-              min={10}
-              max={95}
-              step={1}
-              className="py-2"
-            />
-            <p className="text-[11px] text-muted-foreground leading-tight">
-              % maximal de la cible touchée par la campagne
-            </p>
-          </div>
         </div>
 
         <div className="mt-10">
