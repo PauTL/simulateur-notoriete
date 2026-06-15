@@ -253,7 +253,7 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
         </div>
         <div className="mt-2 text-xs text-muted-foreground" style={{ paddingLeft: 44 }}>
           <span className="font-semibold text-foreground">Recommandation —</span>{" "}
-          {totalGrp.toLocaleString("fr-FR")} GRP distribués sur 52 semaines
+          {totalGrp.toLocaleString("fr-FR")} GRP distribués
         </div>
         </div>
       </motion.div>
