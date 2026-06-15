@@ -231,24 +231,26 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
               {data.map((d) => {
                 const active = d.grp > 0;
                 return (
-                  <button
-                    key={d.week}
-                    type="button"
-                    title={`S${d.week} — ${d.grp} GRP`}
-                    className={[
-                      "h-9 w-10 rounded-lg text-xs font-semibold transition-all duration-150 select-none focus:outline-none flex-shrink-0 flex flex-col items-center justify-center gap-0.5",
-                      active
-                        ? "shadow-sm scale-[1.03] bg-primary text-primary-foreground"
-                        : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent hover:border-border",
-                    ].join(" ")}
-                  >
-                    <span>{d.week}</span>
+                  <div key={d.week} className="relative flex-shrink-0 pt-2 pr-2">
+                    <button
+                      type="button"
+                      title={`S${d.week} — ${d.grp} GRP`}
+                      className={[
+                        "h-9 w-10 rounded-lg text-xs font-semibold transition-all duration-150 select-none focus:outline-none flex items-center justify-center",
+                        active
+                          ? "shadow-sm bg-primary text-primary-foreground"
+                          : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent hover:border-border",
+                      ].join(" ")}
+                    >
+                      {d.week}
+                    </button>
                     {active && (
-                      <span className="text-[9px] leading-none px-1 py-0.5 rounded-full bg-white/20 font-bold">
+                      <span className="absolute -top-0 -right-0 min-w-[22px] h-[18px] px-1.5 rounded-full bg-foreground text-background text-[10px] font-bold flex items-center justify-center shadow-sm">
                         {d.grp}
                       </span>
                     )}
-                  </button>
+                  </div>
+
                 );
               })}
             </div>
