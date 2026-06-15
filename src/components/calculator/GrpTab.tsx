@@ -250,6 +250,18 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
           </ComposedChart>
         </ResponsiveContainer>
       </motion.div>
+
+      {/* Insight */}
+      <div className="bg-secondary/50 border border-secondary rounded-2xl p-5">
+        <p className="text-sm text-foreground leading-relaxed">
+          <span className="font-bold">💡 Insight —</span> Pour passer de{" "}
+          <strong>{currentAssisted}%</strong> à <strong>{targetAssisted}%</strong> de notoriété
+          assistée et maintenir ce niveau sur 52 semaines, nous recommandons une phase de boost
+          de 10 semaines à <strong>{boostGrp} GRP/sem.</strong>, puis un maintien à{" "}
+          <strong>{maintenanceGrp} GRP/sem.</strong> — soit un budget total de{" "}
+          <strong className="text-primary">{totalBudget.toLocaleString("fr-FR")} €</strong>.
+        </p>
+      </div>
     </div>
   );
 }
