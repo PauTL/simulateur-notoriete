@@ -151,7 +151,7 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
             L'objectif de notoriété assistée à atteindre est : {targetAssisted}%
           </p>
           <p className="text-[11px] text-muted-foreground leading-tight">
-            L'outil calcule automatiquement le bon GRP hebdomadaire, pouvant aller entre 60 et 600 GRP
+            L'outil calcule automatiquement le bon GRP hebdomadaire, pouvant aller entre 60 et 600 GRP / semaine
           </p>
         </div>
 
