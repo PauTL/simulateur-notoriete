@@ -2,15 +2,12 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ResponsiveContainer,
-  ComposedChart,
-  Bar,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  ReferenceLine,
 } from "recharts";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
