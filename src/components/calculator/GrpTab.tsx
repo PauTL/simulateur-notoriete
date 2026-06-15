@@ -169,49 +169,6 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
         </div>
       </motion.div>
 
-      {/* KPI cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="rounded-2xl p-5 bg-primary text-primary-foreground shadow-elevated">
-          <p className="text-xs font-medium uppercase tracking-wider opacity-80 mb-1">
-            Budget total (52 sem.)
-          </p>
-          <p className="text-2xl font-bold tracking-tight">
-            {totalBudget.toLocaleString("fr-FR")} €
-          </p>
-        </div>
-        <div className="rounded-2xl p-5 bg-card border border-border shadow-card">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-1">
-            GRP total
-          </p>
-          <p className="text-2xl font-bold tracking-tight text-foreground">
-            {totalGrp.toLocaleString("fr-FR")}
-          </p>
-        </div>
-        <div className="rounded-2xl p-5 bg-card border border-border shadow-card">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-1">
-            GRP / semaine (boost)
-          </p>
-          <p className="text-2xl font-bold tracking-tight text-foreground">{boostGrp}</p>
-        </div>
-        <div className="rounded-2xl p-5 bg-card border border-border shadow-card">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-1">
-            GRP / semaine (maintien)
-          </p>
-          <p className="text-2xl font-bold tracking-tight text-foreground">{maintenanceGrp}</p>
-        </div>
-      </div>
-
-      {/* Insight */}
-      <div className="bg-secondary/50 border border-secondary rounded-2xl p-5">
-        <p className="text-sm text-foreground leading-relaxed">
-          <span className="font-bold">💡 Insight —</span> Pour passer de{" "}
-          <strong>{currentAssisted}%</strong> à <strong>{targetAssisted}%</strong> de notoriété
-          assistée et maintenir ce niveau sur 52 semaines, nous recommandons une phase de boost
-          de 10 semaines à <strong>{boostGrp} GRP/sem.</strong>, puis un maintien à{" "}
-          <strong>{maintenanceGrp} GRP/sem.</strong> — soit un budget total de{" "}
-          <strong className="text-primary">{totalBudget.toLocaleString("fr-FR")} €</strong>.
-        </p>
-      </div>
 
       {/* Chart */}
       <motion.div
@@ -293,6 +250,18 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
           </ComposedChart>
         </ResponsiveContainer>
       </motion.div>
+
+      {/* Insight */}
+      <div className="bg-secondary/50 border border-secondary rounded-2xl p-5">
+        <p className="text-sm text-foreground leading-relaxed">
+          <span className="font-bold">💡 Insight —</span> Pour passer de{" "}
+          <strong>{currentAssisted}%</strong> à <strong>{targetAssisted}%</strong> de notoriété
+          assistée et maintenir ce niveau sur 52 semaines, nous recommandons une phase de boost
+          de 10 semaines à <strong>{boostGrp} GRP/sem.</strong>, puis un maintien à{" "}
+          <strong>{maintenanceGrp} GRP/sem.</strong> — soit un budget total de{" "}
+          <strong className="text-primary">{totalBudget.toLocaleString("fr-FR")} €</strong>.
+        </p>
+      </div>
     </div>
   );
 }
