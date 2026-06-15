@@ -167,7 +167,7 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
       </motion.div>
 
 
-      {/* Chart */}
+      {/* Chart + week grid */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -176,28 +176,37 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
           Répartition des GRP & courbe de mémorisation
         </h3>
-        <ResponsiveContainer width="100%" height={380}>
-          <ComposedChart data={data} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 88%)" />
+
+        {/* Area chart: % mémorisation */}
+        <ResponsiveContainer width="100%" height={280}>
+          <AreaChart data={data} margin={{ top: 10, right: 16, bottom: 0, left: 0 }}>
+            <defs>
+              <linearGradient id="memArea" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.05} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 14% 90%)" vertical={false} />
             <XAxis
               dataKey="week"
-              label={{ value: "Semaine", position: "insideBottom", offset: -5, fontSize: 11 }}
               tick={{ fontSize: 10 }}
               stroke="hsl(220 10% 46%)"
+              interval={0}
+              tickFormatter={(w) => (w % 2 === 1 ? String(w) : "")}
             />
             <YAxis
-              yAxisId="left"
-              tick={{ fontSize: 10 }}
-              stroke="hsl(220 10% 46%)"
-              label={{ value: "GRP", angle: -90, position: "insideLeft", offset: 10, fontSize: 11 }}
-            />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
               domain={[0, 100]}
               tick={{ fontSize: 10 }}
               stroke="hsl(220 10% 46%)"
-              label={{ value: "Notoriété assistée (%)", angle: 90, position: "insideRight", offset: 10, fontSize: 11 }}
+              tickFormatter={(v) => `${v}%`}
+              label={{
+                value: "% Mémorisation",
+                angle: -90,
+                position: "insideLeft",
+                offset: 14,
+                fontSize: 11,
+                fill: "hsl(220 10% 46%)",
+              }}
             />
             <Tooltip
               contentStyle={{
@@ -206,46 +215,61 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
                 boxShadow: "0 8px 24px -4px rgb(0 0 0 / 0.08)",
                 fontSize: 12,
               }}
-              formatter={(value: number, name: string) => {
-                if (name === "GRP") return [`${value}`, "GRP"];
-                if (name === "Notoriété") return [`${value}%`, "Notoriété"];
-                if (name === "Cible") return [`${value}%`, "Cible"];
-                return [value, name];
-              }}
+              formatter={(value: number) => [`${value}%`, "Mémorisation"]}
               labelFormatter={(w) => `Semaine ${w}`}
             />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
-            <Bar
-              yAxisId="left"
-              dataKey="grp"
-              name="GRP"
-              fill="hsl(var(--secondary))"
-              radius={[3, 3, 0, 0]}
-            />
-            <Line
-              yAxisId="right"
+            <Area
               type="monotone"
               dataKey="awareness"
-              name="Notoriété"
               stroke="hsl(var(--primary))"
-              strokeWidth={2.5}
-              dot={false}
+              strokeWidth={2}
+              fill="url(#memArea)"
               animationDuration={600}
             />
-            <ReferenceLine
-              yAxisId="right"
-              y={targetAssisted}
-              stroke="hsl(var(--primary))"
-              strokeDasharray="4 4"
-              label={{
-                value: `Cible ${targetAssisted}%`,
-                position: "insideTopRight",
-                fontSize: 11,
-                fill: "hsl(var(--primary))",
-              }}
-            />
-          </ComposedChart>
+          </AreaChart>
         </ResponsiveContainer>
+
+        {/* Week allocation grid */}
+        <div className="mt-4 flex items-start gap-3">
+          <div className="shrink-0 w-32 pt-2">
+            <div className="text-sm font-semibold text-foreground leading-tight">
+              Recommandation
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {totalGrp.toLocaleString("fr-FR")} GRP distribués
+            </div>
+          </div>
+          <div className="flex-1 overflow-x-auto">
+            <div className="grid grid-flow-col auto-cols-fr gap-1 min-w-full">
+              {data.map((d) => {
+                const active = d.grp > 0;
+                return (
+                  <div
+                    key={d.week}
+                    className="relative flex flex-col items-center"
+                    title={`Semaine ${d.week} — ${d.grp} GRP`}
+                  >
+                    {active && (
+                      <span className="mb-1 inline-flex items-center justify-center min-w-[22px] h-[18px] px-1 rounded-full bg-foreground text-[9px] font-semibold text-background">
+                        {d.grp}
+                      </span>
+                    )}
+                    {!active && <span className="mb-1 h-[18px]" />}
+                    <div
+                      className={`w-full aspect-square rounded-md flex items-center justify-center text-[10px] font-semibold transition-colors ${
+                        active
+                          ? "bg-secondary text-foreground border border-secondary"
+                          : "bg-transparent text-muted-foreground border border-dashed border-border"
+                      }`}
+                    >
+                      {d.week}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </motion.div>
 
       {/* Insight */}
