@@ -90,7 +90,7 @@ function simulate(
 
 export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
   const [beta, setBeta] = useState(30); // %
-  const [couverture, setCouverture] = useState(60); // %
+  const couverture = 60; // % (fixed, no longer user-controlled)
   const [costPerGrp, setCostPerGrp] = useState(4000); // €
 
   const { data, maintenanceGrp, boostGrp, totalGrp, totalBudget } = useMemo(
@@ -106,7 +106,7 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
         animate={{ opacity: 1, y: 0 }}
         className="bg-card rounded-2xl p-5 shadow-card border border-border"
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Coût du GRP
@@ -145,25 +145,6 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
             </p>
           </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Couverture
-              </label>
-              <span className="text-base font-bold text-foreground">{couverture}%</span>
-            </div>
-            <Slider
-              value={[couverture]}
-              onValueChange={([v]) => setCouverture(v)}
-              min={10}
-              max={95}
-              step={1}
-              className="py-2"
-            />
-            <p className="text-[11px] text-muted-foreground leading-tight">
-              % maximal de la cible touchée par la campagne
-            </p>
-          </div>
         </div>
 
         <div className="mt-10">
