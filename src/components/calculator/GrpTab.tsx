@@ -99,7 +99,7 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
 
   return (
     <div className="space-y-6">
-      {/* Inputs */}
+      {/* Inputs + Chart unified block */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -164,18 +164,12 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
             </p>
           </div>
         </div>
-      </motion.div>
 
+        <div className="mt-10">
+          <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
+            Répartition des GRP & courbe de mémorisation
+          </h3>
 
-      {/* Chart + week grid */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card rounded-2xl p-5 shadow-card border border-border"
-      >
-        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-          Répartition des GRP & courbe de mémorisation
-        </h3>
 
         {/* Line chart: % mémorisation */}
         <div className="w-full" style={{ height: 280 }}>
@@ -260,7 +254,9 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
           <span className="font-semibold text-foreground">Recommandation —</span>{" "}
           {totalGrp.toLocaleString("fr-FR")} GRP distribués sur 52 semaines
         </div>
+        </div>
       </motion.div>
+
 
 
     </div>
