@@ -175,7 +175,13 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
         {/* Line chart: % mémorisation */}
         <div className="w-full" style={{ height: 280 }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 8, right: 24, left: 0, bottom: 0 }}>
+            <AreaChart data={data} margin={{ top: 8, right: 24, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="awarenessGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.02} />
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 15% 90%)" vertical={true} />
               <XAxis
                 dataKey="week"
