@@ -12,8 +12,10 @@ import { MarketSelector } from "./MarketSelector";
 import { AwarenessChart } from "./AwarenessChart";
 import { TopOfMindChart } from "./TopOfMindChart";
 import { CostChart } from "./CostChart";
+import { GrpTab } from "./GrpTab";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function CalculatorLayout() {
   const [mode, setMode] = useState<CalcMode>("budget");
@@ -249,128 +251,149 @@ export function CalculatorLayout() {
         </div>
       </motion.div>
 
-      {/* Result block + Insight */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
-      >
-        {/* Main result card */}
-        <motion.div className="rounded-2xl p-5 bg-primary text-primary-foreground shadow-elevated">
-          <p className="text-xs font-medium uppercase tracking-wider opacity-80 mb-1">
-            Notoriété assistée
-          </p>
-          {mode === "budget" ? (
-            <>
-              <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-bold tracking-tight">
-                  {result.costPerPoint.toLocaleString("fr-FR")} €
-                </p>
-                <span className="text-sm opacity-70">par point</span>
-              </div>
-              <p className="text-xs mt-2 opacity-70">
-                +{"pointsGained" in result ? result.pointsGained : 0} pts → {"finalAwareness" in result ? result.finalAwareness : 0}%
+      {/* Tabs */}
+      <Tabs defaultValue="cost" className="w-full">
+        <TabsList className="grid w-full grid-cols-3 h-auto bg-card border border-border p-1 rounded-xl">
+          <TabsTrigger value="cost" className="text-sm py-2.5">
+            Coût du point additionnel
+          </TabsTrigger>
+          <TabsTrigger value="awareness" className="text-sm py-2.5">
+            Évaluation de la notoriété spontanée
+          </TabsTrigger>
+          <TabsTrigger value="grp" className="text-sm py-2.5">
+            Répartition des GRP
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Tab 1: Cost */}
+        <TabsContent value="cost" className="space-y-6 mt-6">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
+            <div className="rounded-2xl p-5 bg-primary text-primary-foreground shadow-elevated">
+              <p className="text-xs font-medium uppercase tracking-wider opacity-80 mb-1">
+                {mode === "budget" ? "Coût moyen du point de notoriété assistée" : "Budget nécessaire"}
               </p>
-            </>
-          ) : (
-            <>
-              <p className="text-3xl font-bold tracking-tight">
-                {"totalBudget" in result ? result.totalBudget.toLocaleString("fr-FR") : 0} €
+              {mode === "budget" ? (
+                <>
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-bold tracking-tight">
+                      {result.costPerPoint.toLocaleString("fr-FR")} €
+                    </p>
+                    <span className="text-sm opacity-70">par point</span>
+                  </div>
+                  <p className="text-xs mt-2 opacity-70">
+                    +{"pointsGained" in result ? result.pointsGained : 0} pts → {"finalAwareness" in result ? result.finalAwareness : 0}%
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-3xl font-bold tracking-tight">
+                    {"totalBudget" in result ? result.totalBudget.toLocaleString("fr-FR") : 0} €
+                  </p>
+                  <p className="text-xs mt-2 opacity-70">
+                    {"pointsNeeded" in result ? result.pointsNeeded : 0} pts à gagner · {result.costPerPoint.toLocaleString("fr-FR")} €/pt
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className="md:col-span-2 bg-secondary/50 border border-secondary rounded-2xl p-5 flex items-center">
+              <p className="text-sm text-foreground leading-relaxed">
+                <span className="font-bold text-secondary-foreground">💡 Insight —</span>{" "}
+                {mode === "budget" ? (
+                  <>
+                    Avec un budget de <strong>{budget.toLocaleString("fr-FR")} €</strong>, votre marque peut gagner{" "}
+                    <strong className="text-primary">
+                      {"pointsGained" in result ? result.pointsGained : 0} points
+                    </strong>{" "}
+                    de notoriété assistée, passant de {currentAwareness}% à{" "}
+                    {"finalAwareness" in result ? result.finalAwareness : currentAwareness}%.
+                    Le coût moyen par point est de{" "}
+                    <strong>{result.costPerPoint.toLocaleString("fr-FR")} €</strong>.
+                  </>
+                ) : (
+                  <>
+                    Pour atteindre <strong>{goal}%</strong> de notoriété assistée (contre {currentAwareness}% aujourd'hui),
+                    il vous faudra un budget estimé à{" "}
+                    <strong className="text-primary">
+                      {"totalBudget" in result ? result.totalBudget.toLocaleString("fr-FR") : 0} €
+                    </strong>
+                    , soit un coût moyen de{" "}
+                    <strong>{result.costPerPoint.toLocaleString("fr-FR")} € par point</strong>.
+                  </>
+                )}
               </p>
-              <p className="text-xs mt-2 opacity-70">
-                {"pointsNeeded" in result ? result.pointsNeeded : 0} pts à gagner · {result.costPerPoint.toLocaleString("fr-FR")} €/pt
+            </div>
+          </motion.div>
+
+          <CostChart
+            market={market}
+            currentAwareness={currentAwareness}
+            goalAwareness={finalAssisted}
+          />
+        </TabsContent>
+
+        {/* Tab 2: Awareness evaluation */}
+        <TabsContent value="awareness" className="space-y-6 mt-6">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
+            <div className="rounded-2xl p-5 bg-primary text-primary-foreground shadow-elevated text-center">
+              <p className="text-xs font-medium uppercase tracking-wider opacity-80 mb-2">
+                Points à gagner en assistée
               </p>
-            </>
-          )}
-        </motion.div>
+              <p className="text-3xl font-bold tracking-tight">+{pointsGainedAssisted}</p>
+              <p className="text-xs mt-1 opacity-70">{currentAwareness}% → {finalAssisted}%</p>
+            </div>
+            <div className="rounded-2xl p-5 bg-secondary text-secondary-foreground shadow-card text-center">
+              <p className="text-xs font-medium uppercase tracking-wider mb-2">
+                Points à gagner en spontanée
+              </p>
+              <p className="text-3xl font-bold tracking-tight">+{pointsGainedSpontaneous}</p>
+              <p className="text-xs mt-1 opacity-70">{currentSpontaneous}% → {finalSpontaneous}%</p>
+            </div>
+            <div className="rounded-2xl p-5 bg-secondary text-secondary-foreground shadow-card text-center">
+              <p className="text-xs font-medium uppercase tracking-wider mb-2">
+                Points à gagner en top of mind
+              </p>
+              <p className="text-3xl font-bold tracking-tight">+{pointsGainedTopOfMind}</p>
+              <p className="text-xs mt-1 opacity-70">{currentTopOfMind}% → {finalTopOfMind}%</p>
+            </div>
+          </motion.div>
 
-        {/* Insight block - takes 2 columns */}
-        <motion.div className="md:col-span-2 bg-secondary/50 border border-secondary rounded-2xl p-5 flex items-center">
-          <p className="text-sm text-foreground leading-relaxed">
-            <span className="font-bold text-secondary-foreground">💡 Insight —</span>{" "}
-            {mode === "budget" ? (
-              <>
-                Avec un budget de <strong>{budget.toLocaleString("fr-FR")} €</strong>, votre marque peut gagner{" "}
-                <strong className="text-primary">
-                  {"pointsGained" in result ? result.pointsGained : 0} points
-                </strong>{" "}
-                de notoriété assistée, passant de {currentAwareness}% à{" "}
-                {"finalAwareness" in result ? result.finalAwareness : currentAwareness}%.
-                Le coût moyen par point est de{" "}
-                <strong>{result.costPerPoint.toLocaleString("fr-FR")} €</strong>.
-              </>
-            ) : (
-              <>
-                Pour atteindre <strong>{goal}%</strong> de notoriété assistée (contre {currentAwareness}% aujourd'hui),
-                il vous faudra un budget estimé à{" "}
-                <strong className="text-primary">
-                  {"totalBudget" in result ? result.totalBudget.toLocaleString("fr-FR") : 0} €
-                </strong>
-                , soit un coût moyen de{" "}
-                <strong>{result.costPerPoint.toLocaleString("fr-FR")} € par point</strong>.
-              </>
-            )}
-          </p>
-        </motion.div>
-      </motion.div>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <AwarenessChart
+              market={market}
+              currentAssisted={currentAwareness}
+              currentSpontaneous={currentSpontaneous}
+              goalAssisted={finalAssisted}
+              goalSpontaneous={finalSpontaneous}
+              declaredSpontaneous={declaredSpontaneousNum}
+            />
+            <TopOfMindChart
+              market={market}
+              currentSpontaneous={currentSpontaneous}
+              currentTopOfMind={currentTopOfMind}
+              goalSpontaneous={finalSpontaneous}
+              goalTopOfMind={finalTopOfMind}
+              declaredTopOfMind={declaredTopOfMindNum}
+            />
+          </div>
+        </TabsContent>
 
-      {/* Cost chart - full width */}
-      <CostChart
-        market={market}
-        currentAwareness={currentAwareness}
-        goalAwareness={finalAssisted}
-      />
-
-      {/* 3 small blocks: points gained */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
-      >
-        <div className="rounded-2xl p-5 bg-primary text-primary-foreground shadow-elevated text-center">
-          <p className="text-xs font-medium uppercase tracking-wider opacity-80 mb-2">
-            Points à gagner en assistée
-          </p>
-          <p className="text-3xl font-bold tracking-tight">+{pointsGainedAssisted}</p>
-          <p className="text-xs mt-1 opacity-70">{currentAwareness}% → {finalAssisted}%</p>
-        </div>
-        <div className="rounded-2xl p-5 bg-secondary text-secondary-foreground shadow-card text-center">
-          <p className="text-xs font-medium uppercase tracking-wider mb-2">
-            Points à gagner en spontanée
-          </p>
-          <p className="text-3xl font-bold tracking-tight">+{pointsGainedSpontaneous}</p>
-          <p className="text-xs mt-1 opacity-70">{currentSpontaneous}% → {finalSpontaneous}%</p>
-        </div>
-        <div className="rounded-2xl p-5 bg-secondary text-secondary-foreground shadow-card text-center">
-          <p className="text-xs font-medium uppercase tracking-wider mb-2">
-            Points à gagner en top of mind
-          </p>
-          <p className="text-3xl font-bold tracking-tight">+{pointsGainedTopOfMind}</p>
-          <p className="text-xs mt-1 opacity-70">{currentTopOfMind}% → {finalTopOfMind}%</p>
-        </div>
-      </motion.div>
-
-      {/* Two charts side by side */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <AwarenessChart
-          market={market}
-          currentAssisted={currentAwareness}
-          currentSpontaneous={currentSpontaneous}
-          goalAssisted={finalAssisted}
-          goalSpontaneous={finalSpontaneous}
-          declaredSpontaneous={declaredSpontaneousNum}
-        />
-        <TopOfMindChart
-          market={market}
-          currentSpontaneous={currentSpontaneous}
-          currentTopOfMind={currentTopOfMind}
-          goalSpontaneous={finalSpontaneous}
-          goalTopOfMind={finalTopOfMind}
-          declaredTopOfMind={declaredTopOfMindNum}
-        />
-      </div>
+        {/* Tab 3: GRP distribution */}
+        <TabsContent value="grp" className="mt-6">
+          <GrpTab
+            currentAssisted={currentAwareness}
+            targetAssisted={finalAssisted}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
