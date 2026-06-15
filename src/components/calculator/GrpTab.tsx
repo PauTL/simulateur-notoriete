@@ -221,7 +221,7 @@ export function GrpTab({ currentAssisted, targetAssisted }: GrpTabProps) {
                 activeDot={{ r: 4, strokeWidth: 0 }}
                 animationDuration={400}
               />
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         </div>
 
